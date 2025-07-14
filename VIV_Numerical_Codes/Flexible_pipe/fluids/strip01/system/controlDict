@@ -1,0 +1,106 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  8
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      controlDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+application     pimpleFoam;
+
+startFrom       latestTime;
+
+stopAt          writeNow;
+
+deltaT          0.0005;
+
+writeControl    timeStep;
+
+writeFrequency  1;
+
+purgeWrite      0;
+
+writeFormat     ascii;
+
+writePrecision  6;
+
+writeCompression off;
+
+timeFormat      general;
+
+timePrecision   6;
+
+runTimeModifiable true;
+
+adjustTimeStep  no;
+
+maxCo           1.0;
+
+
+// ************************************************************************* //
+
+functions
+
+{
+     //阻力系数的输出
+
+     forceCoeffs
+
+     {
+
+         type forceCoeffs; //名称
+
+         functionObjectLibs ("libforces.so"); //包含共享库
+
+         patches (CYLINDER); //此处填写需要监测的边界名称，如果有多个边界采用(patch1 patch2 ...)的形式
+
+         log true; //选择是否输出log文件，这里我们输出，其实影响不大
+
+         rho rhoInf; //参考密度，对于不可压问题，直接填写流体的密度即可
+
+         rhoInf 998; //这里填写流体密度的数值
+
+         CofR (0 0 0);
+
+         liftDir (0 1 0); //升力的方向
+
+         dragDir (1 0 0); //阻力方向
+
+         pitchAxis (0 0 1);
+
+         magUInf 1; //参考速度
+
+         lRef 1; //参考长度
+
+         Aref 1; //参考面积
+
+         writeControl    timeStep; //按照timeStep的方式输出
+
+         writeInterval   1; //间隔我们设置每5步输出一次
+
+     }
+
+            yplus
+    {
+        type yPlus;
+        functionObjectLibs ("libfieldFunctionObjects.so");
+        enabled true;
+
+        writeControl outputTime;
+
+        executeControl outputTime;
+       // executeInterval 10;
+
+        log true;
+    }
+    
+};

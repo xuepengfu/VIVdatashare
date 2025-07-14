@@ -1,0 +1,93 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  8
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      dynamicMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dynamicFvMesh   dynamicMotionSolverFvMesh;
+
+motionSolverLibs ("libsixDoFRigidBodyMotion.so");
+
+motionSolver    sixDoFRigidBodyMotion;
+
+diffusivity     quadratic inverseDistance 1.0 (CYLINDER);
+
+patches         (CYLINDER);
+innerDistance   0.1;//
+outerDistance   0.5;
+
+mass            0.94059284;
+centreOfMass    (0 0 0.1);
+momentOfInertia (3.0664e-07 3.0664e-07 3.0664e-07);
+orientation
+(
+   1 0 0
+   0 1 0
+   0 0 1
+);
+angularMomentum (0 0 0);
+g               (0 0 -9.8);
+rho             rhoInf;
+rhoInf          998;
+reportToFile    on;
+report          on;
+
+solver
+{
+     type    Newmark;
+     gamma   0.5;    // Velocity integration coefficient
+     beta    0.25;   // Position integration coefficient
+}
+
+constraints
+{
+    maxIterations   500;
+    yLine
+    {
+        sixDoFRigidBodyMotionConstraint line;
+        centreOfRotation    (0 0 0.1);
+        direction           (0 1 0);
+    }
+    
+   OrientationConstraint
+ {
+   sixDoFRigidBodyMotionConstraint   orientation;
+   centreOfRotation                  (0 0 0.1);
+ }
+ 
+  Zaixscons
+ {
+   sixDoFRigidBodyMotionConstraint   axis;
+   axis                              (0 0 1);
+ }
+
+ 
+}
+
+restraints
+{
+    verticalSpring
+    {
+        sixDoFRigidBodyMotionRestraint linearSpring;
+
+        anchor          (0 0 0.1);//fix Point
+        refAttachmentPt (0 0 0.1);//fixed point
+        stiffness       5.845199168;//stiffness N/m
+        damping         0.025401689;//Ns/m
+        restLength      0;//original length m
+    }
+
+}
+
+
+// ************************************************************************* //
