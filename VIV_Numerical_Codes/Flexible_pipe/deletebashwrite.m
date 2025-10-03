@@ -10,7 +10,7 @@ filename = filename(3:3+N_strip-1);
 run_copy = [];
 run_copy{1} = '#!/bin/bash';
 run_copy{2} = 'cd fluids';
-
+pause(10);
 for i = 1:N_strip
 
 name_temp = [inputArg1,'/',filename{i}];
