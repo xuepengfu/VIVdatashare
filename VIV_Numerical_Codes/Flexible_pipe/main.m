@@ -197,7 +197,7 @@ t00 = tic;
 disp(['current i is ',num2str(i)])
 % begin caculate
 system('source runpimpleFoam_bash'); %run OF in every strip for one strip
-pause(0.5);
+pause(10);
 disp(['finish openfoam caculation'])
 % read  rare cl/cd
 runningstep = i;
