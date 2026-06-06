@@ -1,3 +1,3 @@
 ## VIV Experiment Results
 
-Bidirectionally_sheared_flow: selected original strian data and process code 
+Bidirectionally_sheared_flow: selected original strain data and processing code. This is the version we are allowed to share due to contract limitation (sorry !), maybe it is easier to extract data from images in published papers....
